@@ -1,0 +1,21 @@
+name: Plugins - Backend - Test and build
+description: Tests, lints and builds the backend.
+
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      run: go mod download
+      shell: bash
+
+    - name: Lint
+      run: golangci-lint run --timeout=5m
+      shell: bash
+
+    - name: Test
+      run: mage -v test
+      shell: bash
+
+    - name: Build
+      run: mage -v buildAll
+      shell: bash

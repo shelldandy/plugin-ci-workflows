@@ -1,0 +1,17 @@
+name: Plugins - Frontend - Test and build
+description: Runs unit tests and builds the frontend
+
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: ${{ github.action_path }}/pm.sh install
+
+    - name: Test
+      shell: bash
+      run: ./node_modules/.bin/jest --passWithNoTests --maxWorkers 4
+
+    - name: Build
+      shell: bash
+      run: ${{ github.action_path }}/pm.sh build

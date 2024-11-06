@@ -1,0 +1,46 @@
+name: Plugins - Publish to catalog
+
+inputs:
+  zips:
+    description: |
+      Array of absolute URLs to ZIP files to publish.
+      It can contain:
+      - a single ZIP for all OS/arch combinations (universal/"any" zip).
+      - multiple ZIPs for different OS/arch combinations.
+      - a combination of both.
+    required: true
+
+  environment:
+    description: |
+      Environment to publish to.
+      Can be 'dev', 'ops', or 'prod'.
+    required: true
+
+  gcom-publish-token:
+    description: GCOM token used to publish the plugin to the catalog.
+    required: true
+  gcloud-auth-token:
+    description: |
+      Google Cloud auth token for IAP acccess.
+      Required only for publishing to dev or ops.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Publish to catalog
+      env:
+        GCLOUD_AUTH_TOKEN: ${{ inputs.gcloud-auth-token }}
+        GCOM_PUBLISH_TOKEN: ${{ inputs.gcom-publish-token }}
+      run: |
+        cd ${{ inputs.zips-folder }}
+
+        # Convert the "zips" JSON array to a space-separated string
+        # (used to pass each ZIP in the JSON array as a separate argument)
+        files=$(echo '${{ inputs.zips }}' | jq -r 'join(" ")')
+
+        ${{ github.action_path }}/publish.sh \
+          --environment "${{ inputs.environment }}" \
+          "${files[@]}"
+      shell: bash
