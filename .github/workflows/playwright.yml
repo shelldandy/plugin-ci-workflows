@@ -1,7 +1,7 @@
 name: Plugins - Playwright E2E tests
 description: |
   Run Playwright E2E tests for the plugin.
-  The plugin must be built via the "plugins-ci" workflow and available as a GitHub artifact before running this workflow.
+  The plugin must be built via the "ci" workflow and available as a GitHub artifact before running this workflow.
 
 on:
   workflow_call:

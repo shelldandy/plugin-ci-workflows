@@ -114,7 +114,7 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Setup
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/setup@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/setup@main
         with:
           go-version: ${{ inputs.go-version }}
           node-version: ${{ inputs.node-version }}
@@ -156,17 +156,17 @@ jobs:
         shell: bash
 
       - name: Test and build frontend
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/frontend@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/frontend@main
 
       - name: Test and build backend
         if: ${{ steps.check-for-backend.outputs.has-backend == 'true' }}
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/backend@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/backend@main
 
       # TODO: security scan?
 
       - name: Package universal ZIP
         id: universal-zip
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/package@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/package@main
         with:
           universal: "true"
           dist-folder: dist
@@ -175,7 +175,7 @@ jobs:
 
       - name: Package os/arch ZIPs
         id: os-arch-zips
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/package@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/package@main
         with:
           universal: "false"
           dist-folder: dist
@@ -239,11 +239,11 @@ jobs:
         shell: bash
 
       - name: Test docs
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/docs/test@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/docs/test@main
 
   playwright:
     name: Playwright E2E tests
-    uses: grafana/plugins-shared-workflows-test/.github/workflows/plugins-playwright.yml@main
+    uses: grafana/plugin-ci-workflows/.github/workflows/playwright.yml@main
     if: ${{ inputs.run-playwright == true }}
     needs:
       - test-and-build

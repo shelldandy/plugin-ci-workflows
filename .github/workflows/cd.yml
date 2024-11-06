@@ -1,7 +1,7 @@
 name: Plugins - Publish plugin
 description: |
   Publishes the plugin to the Grafana Plugin Catalog.
-  The plugin must be built via the "plugins-ci" workflow before running this workflow.
+  The plugin must be built via the "ci" workflow before running this workflow.
   It does the following steps:
   - Publishes the plugin to 'dev', 'ops', and 'prod' catalogs.
   - ('prod' target only) Publishes docs to the website, if they exist.
@@ -89,7 +89,7 @@ jobs:
 
   ci:
     name: CI
-    uses: grafana/plugins-shared-workflows-test/.github/workflows/plugins-ci.yml@main
+    uses: grafana/plugin-ci-workflows/.github/workflows/ci.yml@main
     needs:
       - setup
     with:
@@ -200,7 +200,7 @@ jobs:
         shell: bash
 
       - name: Check and create stub
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/publish/check-and-create-stub@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/publish/check-and-create-stub@main
         if: ${{ matrix.environment != 'prod' }}
         with:
           plugin-id: ${{ fromJSON(needs.ci.outputs.plugin).id }}
@@ -209,7 +209,7 @@ jobs:
           gcloud-auth-token: ${{ steps.gcloud.outputs.id_token }}
 
       - name: Publish to catalog
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/publish/publish@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/publish/publish@main
         with:
           zips: ${{ needs.ci.outputs.gcs-zip-urls-commit }}
           environment: ${{ matrix.environment }}
@@ -260,7 +260,7 @@ jobs:
           owner: ${{ github.repository_owner }}
 
       - name: Publish docs
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/docs/publish@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/docs/publish@main
         with:
           id: ${{ fromJSON(needs.ci.outputs.plugin).id }}
           version: ${{ fromJSON(needs.ci.outputs.plugin).version }}
@@ -289,7 +289,7 @@ jobs:
 
       - name: Parse changelog
         id: changelog
-        uses: grafana/plugins-shared-workflows-test/actions/plugins/changelog@main
+        uses: grafana/plugin-ci-workflows/actions/plugins/changelog@main
 
       - name: Print changelog
         run: |
