@@ -100,7 +100,7 @@ jobs:
       contents: read
       id-token: write
     runs-on: ubuntu-latest
-    name: A test of the oidc debugger
+    name: OIDC debugger
     steps:
       - name: Checkout actions-oidc-debugger
         uses: actions/checkout@v3
