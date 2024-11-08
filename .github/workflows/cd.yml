@@ -172,7 +172,7 @@ jobs:
         if: ${{ matrix.environment != 'prod' }}
         with:
           workload_identity_provider: "projects/304398677251/locations/global/workloadIdentityPools/github/providers/github-provider"
-          service_account: github-integ-artifacts-dev@grafanalabs-workload-identity.iam.gserviceaccount.com
+          service_account: github-plugin-ci-workflows@grafanalabs-workload-identity.iam.gserviceaccount.com
           token_format: id_token
           id_token_audience: 194555723165-aftshfqa32nig79trcrh96ha94ta46jd.apps.googleusercontent.com
           id_token_include_email: true
