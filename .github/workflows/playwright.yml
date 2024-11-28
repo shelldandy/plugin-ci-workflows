@@ -14,7 +14,7 @@ on:
         description: Plugin version
         type: string
         required: true
-
+      # https://github.com/grafana/plugin-actions/blob/main/e2e-version/action.yml        
       skip-grafana-dev-image:
         default: false
         required: false
@@ -44,12 +44,11 @@ jobs:
 
       - name: Resolve Grafana E2E versions
         id: resolve-versions
-        uses: grafana/plugin-actions/e2e-version@main
-        # TODO: pass
-        #with:
-        #  skip-grafana-dev-image: ${{ inputs.skip-grafana-dev-image }}
-        #  version-resolver-type: ${{ inputs.version-resolver-type }}
-        #  grafana-dependency: ${{ inputs.grafana-dependency }}
+        uses: grafana/plugin-actions/e2e-version@main        
+        with:
+          skip-grafana-dev-image: ${{ inputs.skip-grafana-dev-image }}
+          version-resolver-type: ${{ inputs.version-resolver-type }}
+          grafana-dependency: ${{ inputs.grafana-dependency }}
 
   playwright-tests:
     needs: resolve-versions
