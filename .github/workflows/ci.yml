@@ -31,6 +31,10 @@ on:
         type: boolean
         required: false
         default: true
+      run-playwright-with-grafana-dependency:
+        description: Define which grafana dependency to use for Playwright E2E tests.
+        type: string
+        required: false
       go-version:
         description: Go version to use
         type: string
@@ -250,6 +254,7 @@ jobs:
     with:
       id: ${{ fromJSON(needs.test-and-build.outputs.plugin).id}}
       version: ${{ fromJSON(needs.test-and-build.outputs.plugin).version}}
+      grafana-dependency: ${{ inputs.run-playwright-with-grafana-dependency }}
       # TODO: skip-grafana-dev-image, version-resolver-type and grafana-dependency
 
   upload-to-gcs:

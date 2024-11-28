@@ -46,10 +46,10 @@ jobs:
         id: resolve-versions
         uses: grafana/plugin-actions/e2e-version@main
         # TODO: pass
-        #with:
+        with:
         #  skip-grafana-dev-image: ${{ inputs.skip-grafana-dev-image }}
         #  version-resolver-type: ${{ inputs.version-resolver-type }}
-        #  grafana-dependency: ${{ inputs.grafana-dependency }}
+          grafana-dependency: ${{ inputs.grafana-dependency }}
 
   playwright-tests:
     needs: resolve-versions
