@@ -257,7 +257,7 @@ jobs:
 
   playwright:
     name: Playwright E2E tests
-    uses: grafana/plugin-ci-workflows/.github/workflows/playwright.yml@main
+    uses: grafana/plugin-ci-workflows/.github/workflows/playwright.yml@chore/add-playwring-inputs
     if: ${{ inputs.run-playwright == true }}
     needs:
       - test-and-build
