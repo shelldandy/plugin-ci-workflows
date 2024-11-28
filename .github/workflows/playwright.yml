@@ -48,7 +48,7 @@ jobs:
         with:
           skip-grafana-dev-image: ${{ inputs.skip-grafana-dev-image }}
           version-resolver-type: ${{ inputs.version-resolver-type }}
-          grafana-dependency: '${{ inputs.grafana-dependency }}'
+          grafana-dependency: '>=8.5.0'
 
   playwright-tests:
     needs: resolve-versions
