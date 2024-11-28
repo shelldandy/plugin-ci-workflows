@@ -43,12 +43,9 @@ on:
         default: false
       run-playwright-with-version-resolver-type:
         description: Define which version resolver type to use for Playwright E2E tests.
-        type: choice
+        type: string
         required: false
         default: plugin-grafana-dependency
-        options:
-          - plugin-grafana-dependency
-          - version-support-policy
       go-version:
         description: Go version to use
         type: string
