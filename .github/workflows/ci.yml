@@ -31,10 +31,24 @@ on:
         type: boolean
         required: false
         default: true
+      # https://github.com/grafana/plugin-actions/blob/main/e2e-version/action.yml        
       run-playwright-with-grafana-dependency:
-        description: Define which grafana dependency to use for Playwright E2E tests.
+        description: 'Optionally, use this input to pass a semver range of supported Grafana versions to test against. This is only used when version-resolver-type is plugin-grafana-dependency. If not provided, the action will try to read grafanaDependency from the plugin.json file.'
         type: string
         required: false
+      run-playwright-with-skip-grafana-dev-image:
+        description: 'Optionally, you can skip the Grafana dev image'
+        type: boolean
+        required: false
+        default: false
+      run-playwright-with-version-resolver-type:
+        description: Define which version resolver type to use for Playwright E2E tests.
+        type: choice
+        required: false
+        default: plugin-grafana-dependency
+        options:
+          - plugin-grafana-dependency
+          - version-support-policy
       go-version:
         description: Go version to use
         type: string
@@ -255,7 +269,8 @@ jobs:
       id: ${{ fromJSON(needs.test-and-build.outputs.plugin).id}}
       version: ${{ fromJSON(needs.test-and-build.outputs.plugin).version}}
       grafana-dependency: ${{ inputs.run-playwright-with-grafana-dependency }}
-      # TODO: skip-grafana-dev-image, version-resolver-type and grafana-dependency
+      skip-grafana-dev-image: ${{ inputs.run-playwright-with-skip-grafana-dev-image }}
+      version-resolver-type: ${{ inputs.run-playwright-with-version-resolver-type }}
 
   upload-to-gcs:
     name: Upload to GCS
