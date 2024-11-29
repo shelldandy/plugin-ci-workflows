@@ -121,7 +121,7 @@ jobs:
 
       - name: Upload artifacts
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        if: ${{ (inputs.upload-artifacts) && ((always() && steps.run-tests.outcome == 'success') || (failure() && steps.run-tests.outcome == 'failure')) }}
+        if: ${{ (inputs.upload-artifacts == true) && ((always() && steps.run-tests.outcome == 'success') || (failure() && steps.run-tests.outcome == 'failure')) }}
         with:
           name: playwright-report-${{ matrix.GRAFANA_IMAGE.NAME }}-v${{ matrix.GRAFANA_IMAGE.VERSION }}-${{github.run_id}}
           path: playwright-report/
