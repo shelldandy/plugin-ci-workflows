@@ -31,7 +31,7 @@ on:
         type: boolean
         required: false
         default: true
-      # https://github.com/grafana/plugin-actions/blob/main/e2e-version/action.yml        
+      # https://github.com/grafana/plugin-actions/blob/main/e2e-version/action.yml
       run-playwright-with-grafana-dependency:
         description: 'Optionally, use this input to pass a semver range of supported Grafana versions to test against. This is only used when version-resolver-type is plugin-grafana-dependency. If not provided, the action will try to read grafanaDependency from the plugin.json file.'
         type: string
@@ -46,6 +46,14 @@ on:
         type: string
         required: false
         default: plugin-grafana-dependency
+      upload-playwright-artifacts:
+        description: |
+          If true, the Playwright E2E artifacts will be uploaded to GitHub.
+          Default is false.
+          IMPORTANT: Make sure there are no unmasked secrets in the E2E tests before turning this on.
+        required: false
+        type: boolean
+        default: false
       go-version:
         description: Go version to use
         type: string
@@ -268,6 +276,7 @@ jobs:
       grafana-dependency: ${{ inputs.run-playwright-with-grafana-dependency }}
       skip-grafana-dev-image: ${{ inputs.run-playwright-with-skip-grafana-dev-image }}
       version-resolver-type: ${{ inputs.run-playwright-with-version-resolver-type }}
+      upload-artifacts: ${{ inputs.upload-playwright-artifacts }}
 
   upload-to-gcs:
     name: Upload to GCS
