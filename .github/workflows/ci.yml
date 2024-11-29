@@ -46,6 +46,14 @@ on:
         type: string
         required: false
         default: plugin-grafana-dependency
+      upload-playwright-artifacts:
+        description: |
+          If true, the Playwright E2E artifacts will be uploaded to GitHub.
+          Default is false.
+          IMPORTANT: Make sure there are no unmasked secrets in the E2E tests before turning this on.
+        required: false
+        type: boolean
+        default: false
       go-version:
         description: Go version to use
         type: string
@@ -268,6 +276,7 @@ jobs:
       grafana-dependency: ${{ inputs.run-playwright-with-grafana-dependency }}
       skip-grafana-dev-image: ${{ inputs.run-playwright-with-skip-grafana-dev-image }}
       version-resolver-type: ${{ inputs.run-playwright-with-version-resolver-type }}
+      upload-artifacts: ${{ inputs.upload-playwright-artifacts }}
 
   upload-to-gcs:
     name: Upload to GCS
