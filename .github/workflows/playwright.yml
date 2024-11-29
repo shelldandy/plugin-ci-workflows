@@ -27,10 +27,6 @@ on:
         required: false
         type: string
       upload-artifacts:
-        description: |
-          If true, the E2E will be uploaded to GitHub.
-          Default is false.
-          IMPORTANT: Make sure there are no unmasked secrets in the E2E tests before turning this on.
         required: false
         type: boolean
         default: false
