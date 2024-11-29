@@ -14,7 +14,7 @@ on:
         description: Plugin version
         type: string
         required: true
-      # https://github.com/grafana/plugin-actions/blob/main/e2e-version/action.yml        
+      # https://github.com/grafana/plugin-actions/blob/main/e2e-version/action.yml
       skip-grafana-dev-image:
         default: false
         required: false
@@ -26,6 +26,14 @@ on:
       grafana-dependency:
         required: false
         type: string
+      upload-artifacts:
+        description: |
+          If true, the E2E will be uploaded to GitHub.
+          Default is false.
+          IMPORTANT: Make sure there are no unmasked secrets in the E2E tests before turning this on.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -44,7 +52,7 @@ jobs:
 
       - name: Resolve Grafana E2E versions
         id: resolve-versions
-        uses: grafana/plugin-actions/e2e-version@main        
+        uses: grafana/plugin-actions/e2e-version@main
         with:
           skip-grafana-dev-image: ${{ inputs.skip-grafana-dev-image }}
           version-resolver-type: ${{ inputs.version-resolver-type }}
@@ -113,7 +121,7 @@ jobs:
 
       - name: Upload artifacts
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        if: ${{ (always() && steps.run-tests.outcome == 'success') || (failure() && steps.run-tests.outcome == 'failure') }}
+        if: ${{ (inputs.upload-artifacts) && ((always() && steps.run-tests.outcome == 'success') || (failure() && steps.run-tests.outcome == 'failure')) }}
         with:
           name: playwright-report-${{ matrix.GRAFANA_IMAGE.NAME }}-v${{ matrix.GRAFANA_IMAGE.VERSION }}-${{github.run_id}}
           path: playwright-report/
