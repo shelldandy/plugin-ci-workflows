@@ -15,12 +15,19 @@ on:
     inputs:
       # Those inputs can be customized depending on the plugin's needs:
 
-      # GCS-only publishing (no catalog)
+      # Publishing options (GCS and/or catalog)
       gcs-only:
         description: |
           Only publish the plugin to GCS, do not publish the plugin to the Grafana Plugin Catalog.
         default: false
         type: boolean
+      scopes:
+        description: |
+          Comma-separated list of scopes for the plugin version in the catalog.
+          Default is 'universal'.
+        required: false
+        default: universal
+        type: string
 
       # Those inputs are used to customize the CI workflow, before publishing the plugin.
       # They should match with the ones used in CI (ci.yml/push.yml).
@@ -316,6 +323,7 @@ jobs:
         with:
           zips: ${{ needs.ci.outputs.gcs-zip-urls-commit }}
           environment: ${{ matrix.environment }}
+          scopes: ${{ inputs.scopes }}
           gcom-publish-token: ${{ env.GCOM_PUBLISH_TOKEN }}
           gcloud-auth-token: ${{ steps.gcloud.outputs.id_token }}
 
