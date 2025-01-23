@@ -104,6 +104,12 @@ on:
         type: string
         required: false
 
+      # Artifacts attestation for build provenance
+      attestation:
+        description: Create a verifiable attestation for the plugin using Github OIDC.
+        type: boolean
+        required: false
+
       # User inputs
       environment:
         description: |
@@ -134,6 +140,7 @@ concurrency:
 permissions:
   contents: write
   id-token: write
+  attestations: write
 
 env:
   VAULT_INSTANCE: ops
@@ -198,6 +205,32 @@ jobs:
           && needs.setup.outputs.commit-sha
           || ''
         }}
+
+  build-attestation:
+    name: Build attestation
+    if: ${{ inputs.attestation }}
+    needs:
+      - ci
+    runs-on: ubuntu-latest
+
+    outputs:
+      attestation-id: ${{ steps.attestation.outputs.attestation-id }}
+      attestation-url: ${{ steps.attestation.outputs.attestation-url }}
+      bundle-path: ${{ steps.attestation.outputs.bundle-path }}
+
+    steps:
+      - name: Download GitHub artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: dist-artifacts
+          path: /tmp/dist-artifacts
+
+      - name: Generate artifact attestation
+        if: ${{ inputs.attestation }}
+        id: attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: /tmp/dist-artifacts/*.zip
 
   define-variables:
     name: Define variables
