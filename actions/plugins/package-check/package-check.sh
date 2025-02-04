@@ -38,6 +38,8 @@ exe=$(jq -r .executable plugin.json)
 if [ "$exe" != "null" ]; then
     # Ensure at least one os/arch combo executable exists
     found=false
+    # TODO: ensure correct os/arch + exe combo instead (correct name => correct file)
+    #   regex: `.+\.(\w+)_(\w+)\.zip`
     for os in linux darwin windows; do
         for arch in amd64 arm64 arm; do
             if [ -f "$exe" ]; then
@@ -56,5 +58,7 @@ if [ "$exe" != "null" ]; then
         exit 1
     fi
 fi
+
+# TODO: support nested apps
 
 popd > /dev/null
