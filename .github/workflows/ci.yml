@@ -336,11 +336,9 @@ jobs:
     name: Upload to GCS
     runs-on: ubuntu-latest
 
-    # Upload to GCS:
-    # - For push event (commits and tags)
-    # - For internal PRs
-    # But skip the GCS upload for PRs from forks (no access to the GCS bucket)
-    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    # Skip the GCS upload for PRs from forks (no access to the GCS bucket)
+    # This is equivalent to !env.IS_FORK equivalent (we don't have access to the env context at this level)
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
 
     permissions:
       contents: read
