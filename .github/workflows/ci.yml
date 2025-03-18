@@ -336,7 +336,9 @@ jobs:
 
   playwright:
     name: Playwright E2E tests
-    uses: grafana/plugin-ci-workflows/.github/workflows/playwright.yml@main
+    # TODO: remove this once the dockerized-playwright branch is merged
+    # uses: grafana/plugin-ci-workflows/.github/workflows/playwright.yml@main
+    uses: shelldandy/plugin-ci-workflows/.github/workflows/playwright.yml@feat/dockerized-playwright
     if: ${{ inputs.run-playwright == true }}
     needs:
       - test-and-build
