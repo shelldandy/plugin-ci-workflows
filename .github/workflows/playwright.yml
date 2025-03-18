@@ -116,8 +116,13 @@ jobs:
 
       - name: Start Grafana
         run: |
-          docker compose -f ${{ inputs.docker-compose-file }} pull
-          GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} docker compose -f ${{ inputs.docker-compose-file }} up -d
+          if [ -n "${{ inputs.docker-compose-file }}" ]; then
+            docker compose -f ${{ inputs.docker-compose-file }} pull
+            GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} docker compose -f ${{ inputs.docker-compose-file }} up -d
+          else
+            docker compose pull
+            GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} docker compose up -d
+          fi
 
       - name: Wait for Grafana to start
         uses: grafana/plugin-actions/wait-for-grafana@main
