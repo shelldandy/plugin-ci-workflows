@@ -44,7 +44,11 @@ on:
       dockerized-playwright-prepare:
         required: false
         type: string
-        description: Custom npm command to prepare Playwright environment in a container. If provided, skips Node.js setup steps.
+        description: Custom npm command to prepare Playwright environment in a container. If provided, dockerized-playwright-command must also be provided.
+      dockerized-playwright-command:
+        required: false
+        type: string
+        description: Custom command to run Playwright tests in a container. Must be provided if dockerized-playwright-prepare is used.
 
 permissions:
   contents: read
@@ -80,6 +84,18 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     steps:
       - uses: actions/checkout@v4.2.2
+
+      - name: Validate dockerized inputs
+        if: ${{ inputs.dockerized-playwright-prepare || inputs.dockerized-playwright-command }}
+        run: |
+          if [ -n "${{ inputs.dockerized-playwright-prepare }}" ] && [ -z "${{ inputs.dockerized-playwright-command }}" ]; then
+            echo "Error: dockerized-playwright-command must be provided when using dockerized-playwright-prepare"
+            exit 1
+          fi
+          if [ -z "${{ inputs.dockerized-playwright-prepare }}" ] && [ -n "${{ inputs.dockerized-playwright-command }}" ]; then
+            echo "Error: dockerized-playwright-prepare must be provided when using dockerized-playwright-command"
+            exit 1
+          fi
 
       - name: Setup Node.js environment
         if: ${{ !inputs.dockerized-playwright-prepare }}
@@ -140,7 +156,12 @@ jobs:
 
       - name: Run Playwright tests
         id: run-tests
-        run: npx playwright test --config ${{ inputs.playwright-config }}
+        run: |
+          if [ -n "${{ inputs.dockerized-playwright-command }}" ]; then
+            ${{ inputs.dockerized-playwright-command }}
+          else
+            npx playwright test --config ${{ inputs.playwright-config }}
+          fi
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4.6.1
