@@ -41,6 +41,10 @@ on:
         type: string
         default: playwright.config.ts
         description: Path to the docker-compose file(s) to use for testing. Can be a single file or comma-separated list of files.
+      dockerized-playwright-prepare:
+        required: false
+        type: string
+        description: Custom npm command to prepare Playwright environment in a container. If provided, skips Node.js setup steps.
 
 permissions:
   contents: read
@@ -78,11 +82,13 @@ jobs:
       - uses: actions/checkout@v4.2.2
 
       - name: Setup Node.js environment
+        if: ${{ !inputs.dockerized-playwright-prepare }}
         uses: actions/setup-node@v4.2.0
         with:
           node-version-file: .nvmrc
 
       - name: Install npm dependencies
+        if: ${{ !inputs.dockerized-playwright-prepare }}
         # TODO: find a better way
         run: |
           if [ -f yarn.lock ]; then
@@ -93,7 +99,12 @@ jobs:
         shell: bash
 
       - name: Install Playwright Browsers
+        if: ${{ !inputs.dockerized-playwright-prepare }}
         run: npx playwright install --with-deps chromium
+
+      - name: Prepare Playwright environment in container
+        if: ${{ inputs.dockerized-playwright-prepare }}
+        run: ${{ inputs.dockerized-playwright-prepare }}
 
       - name: Download GitHub artifact
         uses: actions/download-artifact@v4.1.9
